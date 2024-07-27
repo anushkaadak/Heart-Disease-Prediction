@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Heart Disease Prediction</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body style="background-color: #d2deed">
+
+    <div class="topnav" id="myTopnav">
+        <a class="active" href="#"><i class="fa fa-fw fa-home"></i> Home</a>
+        <a href="#"><i class="fa fa-fw fa-envelope"></i> Contact</a>
+        <a href="https://github.com/IBM/predict-insurance-charges-with-ai"><i class="fa fa-info-circle"></i> About</a>
+    </div>
+
+    <center>
+        <div style="app-header">
+            <h2 style="font-size: 50px;">Heart Disease Prediction</h2>
+            <p>Prediction by IBM Watson Machine Learning and AutoAI.</p>
+            <p>Fill out the form to see the prediction.</p>
+        </div>
+    </center>
+
+    <form id="predictionForm" class="text-center" style="border-style: solid ; color : #757575; margin-bottom:10px">
+        <table width="100%">
+            <tbody>
+                <tr>
+                    <td>
+                        <label for="age" class="form-field">Age:</label>
+                        <input type="text" id="age" name="age">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="sex" class="form-field">Sex:</label>
+                        <select name="sex" id="sex">
+                            <option value="" disabled selected></option>
+                            <option value="male">M</option>
+                            <option value="female">F</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="ChestPainType" class="form-field">ChestPainType:</label>
+                        <select name="ChestPainType" id="ChestPainType">
+                            <option value="" disabled selected></option>
+                            <option value="Atypical Angina">ATA</option>
+                            <option value="Non-Anginal Pain">NAP</option>
+                            <option value="Asymptomatic">ASY</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="RestingBP" class="form-field">RestingBP:</label>
+                        <input type="text" id="RestingBP" name="RestingBP">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Cholesterol" class="form-field">Cholesterol:</label>
+                        <input type="text" id="Cholesterol" name="Cholesterol">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="FastingBS" class="form-field">FastingBS:</label>
+                        <select name="FastingBS" id="FastingBS">
+                            <option value="" disabled selected></option>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="RestingECG" class="form-field">RestingECG:</label>
+                        <select name="RestingECG" id="RestingECG">
+                            <option value="" disabled selected></option>
+                            <option value="Normal">Normal</option>
+                            <option value="ST">ST</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="MaxHR" class="form-field">MaxHR:</label>
+                        <input type="text" id="MaxHR" name="MaxHR">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="ExerciseAngina" class="form-field">ExerciseAngina:</label>
+                        <select name="ExerciseAngina" id="ExerciseAngina">
+                            <option value="" disabled selected></option>
+                            <option value="No">N</option>
+                            <option value="Yes">Y</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="Oldpeak" class="form-field">Oldpeak:</label>
+                        <select name="Oldpeak" id="Oldpeak">
+                            <option value="" disabled selected></option>
+                            <option value="0">0</option>
+                            <option value="1">1</option>
+                            <option value="1.5">1.5</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <label for="ST_Slope" class="form-field">ST_Slope:</label>
+                        <select name="ST_Slope" id="ST_Slope">
+                            <option value="" disabled selected></option>
+                            <option value="Up">Up</option>
+                            <option value="Flat">Flat</option>
+                        </select>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <input type="button" id="submitBtn" style="margin-bottom: 10px;" value="Predict" onclick="predictHeartDisease()">
+    </form>
+
+    <div class="d-flex justify-content-center">
+        <div id="loader" style="display: none;" class="spinner-border"></div>
+    </div>
+
+    <div class="output-container">
+        <center>
+            <div id="output" style="display: none;">
+                <h5>Data Dynamo Squad</h5>
+                <h3>Heart Disease Prediction</h3>
+            </div>
+        </center>
+    </div>
+
+    <center>
+        <img src="image.png" alt="arch-diagram">
+    </center>
+
+    <script>
+        function predictHeartDisease() {
+            var formData = {
+                'Age': document.getElementById('age').value,
+                'Sex': document.getElementById('sex').value,
+                'ChestPainType': document.getElementById('ChestPainType').value,
+                'RestingBP': document.getElementById('RestingBP').value,
+                'Cholesterol': document.getElementById('Cholesterol').value,
+                'FastingBS': document.getElementById('FastingBS').value,
+                'RestingECG': document.getElementById('RestingECG').value,
+                'MaxHR': document.getElementById('MaxHR').value,
+                'ExerciseAngina': document.getElementById('ExerciseAngina').value,
+                'Oldpeak': document.getElementById('Oldpeak').value,
+                'ST_Slope': document.getElementById('ST_Slope').value
+            };
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/predict', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    var outputDiv = document.getElementById('output');
+                    outputDiv.style.display = 'block';
+                    outputDiv.innerHTML = '<p>' + response.message + '</p>';
+                } else {
+                    console.error('Request failed. Status: ' + xhr.status);
+                }
+            };
+
+            xhr.send(JSON.stringify(formData));
+        }
+
+        function startSpinner() {
+            var loader = document.getElementById("loader");
+            loader.style.display = "block";
+
+            setTimeout(function () {
+                var outputDiv = document.getElementById("output");
+                var loader = document.getElementById("loader");
+                loader.style.display = "none";
+                outputDiv.style.display = "block";
+            }, 3000);
+        }
+    </script>
+
+</body>
+
+</html>
